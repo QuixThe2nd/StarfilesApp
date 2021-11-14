@@ -10,7 +10,7 @@ You can join starfiles community on discord here : <a href="https://discord.gg/J
 or contact with the developer at:
 <p align="left">
   <a href="https://vk.com/anasybal" alt="Vk account" title="Vk account"><img src="https://s3.amazonaws.com/freebiesupply/large/2x/vk-logo-transparent.png" width="24" height="24"></a>
-  <a href="mailto:anasybal@vk.com" alt="E-mail" title="E-mail"><img src="http://www.newdesignfile.com/postpic/2011/12/email-logo-transparent_230768.png" width="24" height="25"></a>
+  <a href="mailto:da.lil.nickel@protonmail.com" alt="E-mail" title="E-mail"><img src="https://icons.iconarchive.com/icons/papirus-team/papirus-apps/512/protonmail-desktop-icon.png" width="26" height="26"></a>
   <a href="https://lil-nickel.tk/StarfilesApp" alt="Website" title="Website"><img src="https://www.languagecurry.com/img/558-5589647_png-world-wide-web-logo-icon-transparent-background.png" width="25" height="24"></a>
 </p>
 <hr />
