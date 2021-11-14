@@ -1,0 +1,10 @@
+<RCC>
+    <qresource prefix="/Database">
+        <file>common/Database.db</file>
+    </qresource>
+    <qresource prefix="/images">
+        <file>images/logo/favicon.ico</file>
+        <file>images/logo/128x128.png</file>
+        <file>images/copy.svg</file>
+    </qresource>
+</RCC>
