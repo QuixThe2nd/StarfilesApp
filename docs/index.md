@@ -1,37 +1,19 @@
-## Welcome to GitHub Pages
+## Starfiles App
 
-You can use the [editor on GitHub](https://github.com/Lil-Nickel/StarfilesApp/edit/master/docs/index.md) to maintain and preview the content for your website in Markdown files.
+Starfiles App is an open-source desktop client for [starfiles.co](https://starfiles.co) which focus on the simple and privacy 🕴🏽.
 
-Whenever you commit to this repository, GitHub Pages will run [Jekyll](https://jekyllrb.com/) to rebuild the pages in your site, from the content in your Markdown files.
+whenever you made something cool, and you feel like u wanna share it with your community.
+just hit up the app and start uploading 🤝🏽.
 
-### Markdown
+### Download
 
-Markdown is a lightweight and easy-to-use syntax for styling your writing. It includes conventions for
-
-```markdown
-Syntax highlighted code block
-
-# Header 1
-## Header 2
-### Header 3
-
-- Bulleted
-- List
-
-1. Numbered
-2. List
-
-**Bold** and _Italic_ and `Code` text
-
-[Link](url) and ![Image](src)
-```
-
-For more details see [Basic writing and formatting syntax](https://docs.github.com/en/github/writing-on-github/getting-started-with-writing-and-formatting-on-github/basic-writing-and-formatting-syntax).
-
-### Jekyll Themes
-
-Your Pages site will use the layout and styles from the Jekyll theme you have selected in your [repository settings](https://github.com/Lil-Nickel/StarfilesApp/settings/pages). The name of this theme is saved in the Jekyll `_config.yml` configuration file.
+You can download the Beta Version from the repo releases area : [v1.0.0-Beta](https://github.com/Lil-Nickel/StarfilesApp/releases/tag/v1.0.0)
 
 ### Support or Contact
-
-Having trouble with Pages? Check out our [documentation](https://docs.github.com/categories/github-pages-basics/) or [contact support](https://support.github.com/contact) and we’ll help you sort it out.
+You can join starfiles community on discord here : <a href="https://discord.gg/JFvfPfJ" alt="Starfiles discord server"><img src="https://vignette.wikia.nocookie.net/spartaremix/images/e/ec/Discord-new-logo.png" width="20" height="20"></a>
+<p align="left">
+  <a href="https://vk.com/anasybal" alt="Vk account"><img src="https://s3.amazonaws.com/freebiesupply/large/2x/vk-logo-transparent.png" width="24" height="24"></a>
+  <a href="mailto:anasybal@vk.com" alt="E-mail"><img src="http://www.newdesignfile.com/postpic/2011/12/email-logo-transparent_230768.png" width="24" height="25"></a>
+</p>
+<hr />
+made with ❤ in 🌍
