@@ -5,6 +5,12 @@ Starfiles App is an open-source desktop client for [starfiles.co](https://starfi
 whenever you made something cool, and you feel like u wanna share it with your community.
 just hit up the app and start uploading 🤝🏽.
 
+### Screen's
+<img src="./1.png" />
+<img src="./2.png" />
+<img src="./3.png" />
+<img src="./4.png" />
+
 ### Download
 
 Help us to improve this application by testing the beta release : [v1.0.0-Beta](https://github.com/Lil-Nickel/StarfilesApp/releases/tag/v1.0.0)
