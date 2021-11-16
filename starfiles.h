@@ -25,10 +25,6 @@
 #include <QSqlQuery>
 #include <QSqlRecord>
 
-#include <win-toast/wintoastlib.h>
-#include <notifyhandler.h>
-using namespace WinToastLib;
-
 #include "uploaded.h"
 
 QT_BEGIN_NAMESPACE
@@ -51,29 +47,25 @@ private slots:
 	void on_BtnSaveSettings_clicked();
 
 	// UPLOAD SLOTS :
-	void uploadProgress(qint64 received, qint64 total);
-	void finished(QNetworkReply *reply);
+	void UploadProgress(qint64 received, qint64 total);
+	void UploadFinished(QNetworkReply *reply);
 
 	// PK VALIDATE :
 	void PKValidateFinished(QNetworkReply *reply);
 
-	// LOAD FILES FROM API:
-	void LoadFilesFromAPIFinished(QNetworkReply *reply);
-
-	private:
+private:
     Ui::Starfiles *ui;
-	QString pk_token, List2Show;
+	QString pk_token;
 	bool Save2db;
-    QSqlDatabase db = QSqlDatabase::addDatabase("QSQLITE");
+	QSqlDatabase db;
     bool IsOnline();
     QString FileBaseName = nullptr;
+	void ClearFilesList();
 	void AppendToFilesList(QString FileID, QString FileName, QString DownloadLink);
 	void LoadFilesFromDB(bool clear);
-	void LoadFilesFromAPI(bool clear);
 	void SaveSettings();
 	void LoadSettings();
 	void DefaultSettings();
-	bool CreateToast(QString Title, QString Message);
 	Uploaded Upl;
 };
 #endif // STARFILES_H

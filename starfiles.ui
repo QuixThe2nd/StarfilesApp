@@ -483,50 +483,6 @@ QTableWidget &gt; * {
            </item>
           </layout>
          </item>
-         <item row="1" column="0" colspan="2">
-          <widget class="QGroupBox" name="groupBox">
-           <property name="font">
-            <font>
-             <family>Titillium Web</family>
-             <pointsize>9</pointsize>
-            </font>
-           </property>
-           <property name="title">
-            <string>List files from :</string>
-           </property>
-           <layout class="QVBoxLayout" name="verticalLayout">
-            <item>
-             <widget class="QRadioButton" name="RadUserFiles">
-              <property name="font">
-               <font>
-                <family>Titillium Web</family>
-                <pointsize>9</pointsize>
-               </font>
-              </property>
-              <property name="text">
-               <string>Starfiles database *private key required*</string>
-              </property>
-             </widget>
-            </item>
-            <item>
-             <widget class="QRadioButton" name="RadLocalFiles">
-              <property name="font">
-               <font>
-                <family>Titillium Web</family>
-                <pointsize>9</pointsize>
-               </font>
-              </property>
-              <property name="text">
-               <string>Local database</string>
-              </property>
-              <property name="checked">
-               <bool>true</bool>
-              </property>
-             </widget>
-            </item>
-           </layout>
-          </widget>
-         </item>
          <item row="2" column="0" colspan="2">
           <spacer name="verticalSpacer_3">
            <property name="orientation">
@@ -540,7 +496,14 @@ QTableWidget &gt; * {
            </property>
           </spacer>
          </item>
-         <item row="1" column="2">
+         <item row="3" column="0" colspan="3">
+          <widget class="Line" name="line_2">
+           <property name="orientation">
+            <enum>Qt::Horizontal</enum>
+           </property>
+          </widget>
+         </item>
+         <item row="1" column="0" colspan="3">
           <widget class="QGroupBox" name="groupBox_4">
            <property name="font">
             <font>
@@ -588,13 +551,6 @@ QTableWidget &gt; * {
              </widget>
             </item>
            </layout>
-          </widget>
-         </item>
-         <item row="3" column="0" colspan="3">
-          <widget class="Line" name="line_2">
-           <property name="orientation">
-            <enum>Qt::Horizontal</enum>
-           </property>
           </widget>
          </item>
         </layout>

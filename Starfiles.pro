@@ -8,13 +8,10 @@ SOURCES += \
     main.cpp \
     starfiles.cpp \
     uploaded.cpp \
-    win-toast/wintoastlib.cpp
 
 HEADERS += \
-    notifyhandler.h \
     starfiles.h \
     uploaded.h \
-    win-toast/wintoastlib.h
 
 FORMS += \
     starfiles.ui \

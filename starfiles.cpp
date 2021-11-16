@@ -9,13 +9,12 @@ Starfiles::Starfiles(QWidget *parent)
 	ui->BtnCancelUpload->setHidden(true);
 	if(!QDir(QDir::homePath() + "/AppData/Local/StarfilesApp").exists())
 		QDir().mkdir(QDir::homePath() + "/AppData/Local/StarfilesApp");
-	if(!QFile::exists(QDir::homePath() + "/AppData/Local/StarfilesApp/logo.png"))
-		QFile::copy(":/images/images/logo/128x128.png", QDir::homePath() + "/AppData/Local/StarfilesApp/logo.png");
 	QString DatabasePath = QDir::homePath() + "/AppData/Local/StarfilesApp/Database.db";
 	if(!QFile::exists(DatabasePath)){
 		QFile::copy(":/Database/common/Database.db", DatabasePath);
 		QFile(DatabasePath).setPermissions(QFileDevice::ReadOwner | QFileDevice::WriteOwner);
 	}
+	db = QSqlDatabase::addDatabase("QSQLITE");
 	db.setDatabaseName(DatabasePath);
 	bool ok = db.open();
 	if(!ok){
@@ -28,18 +27,9 @@ Starfiles::Starfiles(QWidget *parent)
 		messageBox.exec();
 		exit(1);
 	}
-	WinToast::instance()->setAppName(L"Starfiles");
-	WinToast::instance()->setAppUserModelId(WinToast::configureAUMI(L"Anas Yousef", L"Starfiles", L"App", L"1.0.0"));
-	WinToast::instance()->initialize();
 	LoadSettings();
 	DefaultSettings();
-	if(List2Show == "local"){
-		LoadFilesFromDB(false);
-	}else{
-		if(IsOnline()){
-			LoadFilesFromAPI(false);
-		}
-	}
+	LoadFilesFromDB(false);
 }
 
 Starfiles::~Starfiles()
@@ -54,11 +44,13 @@ void Starfiles::AppendToFilesList(QString FileID, QString FileName, QString Down
 	ui->FileList->setItem(ui->FileList->rowCount()-1, 2, new QTableWidgetItem(DownloadLink));
 }
 
+void Starfiles::ClearFilesList(){
+	while(ui->FileList->rowCount() > 0)
+		ui->FileList->removeRow(0);
+}
+
 void Starfiles::LoadFilesFromDB(bool clear){
-	if(clear){
-		while(ui->FileList->rowCount() > 0)
-			ui->FileList->removeRow(0);
-	}
+	if(clear) ClearFilesList();
 	QSqlQuery query;
 	query.exec("SELECT * FROM files;");
 	while(query.next()){
@@ -70,55 +62,11 @@ void Starfiles::LoadFilesFromDB(bool clear){
 	}
 }
 
-void Starfiles::LoadFilesFromAPI(bool clear){
-	if(clear){
-		while(ui->FileList->rowCount() > 0)
-			ui->FileList->removeRow(0);
-	}
-	QUrl url("https://api.starfiles.co/user/files");
-	QUrlQuery parameters;
-	parameters.addQueryItem("profile", pk_token);
-	url.setQuery(parameters);
-	QNetworkRequest request(url);
-	QNetworkAccessManager *manager = new QNetworkAccessManager(this);
-	QNetworkReply *reply = manager->get(request);
-	connect(manager, &QNetworkAccessManager::finished, this, &Starfiles::LoadFilesFromAPIFinished);
-	Q_UNUSED(reply);
-}
-
-void Starfiles::LoadFilesFromAPIFinished(QNetworkReply *reply)
-{
-	QByteArray response = reply->readAll();
-	QJsonDocument doc = QJsonDocument::fromJson(response);
-	QJsonArray Json = doc.toVariant().toJsonArray();
-	if(Json.size() > 0){
-		for(int index=0; index < Json.size(); index++){
-			QJsonObject CurrentObject = Json[index].toObject();
-			QString FileID, DownloadLink, FileName;
-			FileID = CurrentObject.value("id").toString();
-			FileName = CurrentObject.value("name").toString();
-			DownloadLink = "https://starfiles.co/file/" + FileID;
-			AppendToFilesList(FileID, FileName, DownloadLink);
-		}
-	}
-}
-
 void Starfiles::SaveSettings()
 {
-	if(ui->RadUserFiles->isChecked() && ui->TextPk->text() == nullptr){
-		QMessageBox messageBox;
-		messageBox.setIcon(QMessageBox::Information);
-		messageBox.setWindowIcon(QIcon(":/images/images/logo/favicon.ico"));
-		messageBox.setWindowTitle("Starfiles");
-		messageBox.setText("to list all your files on starfiles you need a private key, insert one and try again.");
-		messageBox.exec();
-		return;
-	}
 	if(ui->TextPk->text() != pk_token && ui->TextPk->text() != nullptr){
 		if(IsOnline()){
 			ui->TextPk->setDisabled(true);
-			ui->RadLocalFiles->setDisabled(true);
-			ui->RadUserFiles->setDisabled(true);
 			ui->ChkSave2db->setDisabled(true);
 			ui->BtnCancelSettings->setDisabled(true);
 			ui->BtnSaveSettings->setDisabled(true);
@@ -141,9 +89,8 @@ void Starfiles::SaveSettings()
 		}
 	}else{
 		QSqlQuery query;
-		query.prepare("UPDATE settings SET pk_token = :pk, files_area = :fa, save_to_db = :std WHERE 1 = 1;");
+		query.prepare("UPDATE settings SET pk_token = :pk, save_to_db = :std WHERE 1 = 1;");
 		query.bindValue(":pk", (ui->TextPk->text() == nullptr)? "NULL" : ui->TextPk->text());
-		query.bindValue(":fa", (ui->RadUserFiles->isChecked() == true)? "api" : "local");
 		query.bindValue(":std", ui->ChkSave2db->isChecked());
 		query.exec();
 		LoadSettings();
@@ -158,7 +105,6 @@ void Starfiles::LoadSettings()
 	if(query.next()){
 		QString pk = query.value(query.record().indexOf("pk_token")).toString();
 		pk_token = (pk == "NULL")? nullptr : pk;
-		List2Show = query.value(query.record().indexOf("files_area")).toString();
 		Save2db = query.value(query.record().indexOf("save_to_db")).toBool();
 	}
 }
@@ -166,23 +112,7 @@ void Starfiles::LoadSettings()
 void Starfiles::DefaultSettings()
 {
 	ui->TextPk->setText(pk_token);
-	ui->RadLocalFiles->setChecked((List2Show == "local"));
-	ui->RadUserFiles->setChecked((List2Show == "api"));
 	ui->ChkSave2db->setChecked(Save2db);
-}
-
-bool Starfiles::CreateToast(QString Title, QString Message){
-	WinToastTemplate notify = WinToastTemplate(WinToastTemplate::ImageAndText02);
-	notify.setTextField(Title.toStdWString(), WinToastTemplate::FirstLine);
-	notify.setTextField(Message.toStdWString(), WinToastTemplate::SecondLine);
-	notify.setAudioPath(static_cast<WinToastTemplate::AudioSystemFile>(WinToastTemplate::AudioSystemFile::SMS));
-	notify.setAudioOption(static_cast<WinToastTemplate::AudioOption>(WinToastTemplate::AudioOption::Default));
-	notify.setImagePath(QString(QDir::homePath() + "/AppData/Local/StarfilesApp/logo.png").toStdWString());
-	if (WinToast::instance()->showToast(notify, new NotifyHandler())) {
-		return false;
-	}else{
-		return true;
-	}
 }
 
 bool Starfiles::IsOnline(){
@@ -234,9 +164,9 @@ void Starfiles::on_BtnUpload_clicked()
 			QNetworkRequest request(url);
 			QNetworkAccessManager *manager = new QNetworkAccessManager(this);
 			QNetworkReply *reply = manager->post(request, multiPart);
-			connect(manager, &QNetworkAccessManager::finished, this, &Starfiles::finished);
+			connect(manager, &QNetworkAccessManager::finished, this, &Starfiles::UploadFinished);
 			connect(ui->BtnCancelUpload, &QPushButton::clicked, reply, &QNetworkReply::abort);
-			connect(reply, &QNetworkReply::uploadProgress, this, &Starfiles::uploadProgress);
+			connect(reply, &QNetworkReply::uploadProgress, this, &Starfiles::UploadProgress);
 			multiPart->setParent(reply);
 		}else{
 			QMessageBox messageBox;
@@ -250,7 +180,7 @@ void Starfiles::on_BtnUpload_clicked()
 	}
 }
 
-void Starfiles::uploadProgress(qint64 received, qint64 total){
+void Starfiles::UploadProgress(qint64 received, qint64 total){
 	if(received != 0 && total != 0){
 		qint64 percent;
 		percent = received * 100 / total;
@@ -258,7 +188,7 @@ void Starfiles::uploadProgress(qint64 received, qint64 total){
 	}
 }
 
-void Starfiles::finished(QNetworkReply *reply){
+void Starfiles::UploadFinished(QNetworkReply *reply){
 	ui->BtnUpload->setEnabled(true);
 	ui->BtnUpload->setText("Upload file");
 	ui->progressBar->setValue(0);
@@ -280,7 +210,6 @@ void Starfiles::finished(QNetworkReply *reply){
 				query.addBindValue(DownloadLink);
 				query.exec();
 			}
-			CreateToast("All done", "Your file has been successfully uploaded.");
 			AppendToFilesList(FileID, FileBaseName, DownloadLink);
 			Upl.Init(FileID, FileBaseName, DownloadLink);
 			Upl.exec();
@@ -301,8 +230,6 @@ void Starfiles::finished(QNetworkReply *reply){
 void Starfiles::PKValidateFinished(QNetworkReply *reply)
 {
 	ui->TextPk->setDisabled(false);
-	ui->RadLocalFiles->setDisabled(false);
-	ui->RadUserFiles->setDisabled(false);
 	ui->ChkSave2db->setDisabled(false);
 	ui->BtnCancelSettings->setDisabled(false);
 	ui->BtnSaveSettings->setDisabled(false);
@@ -311,14 +238,12 @@ void Starfiles::PKValidateFinished(QNetworkReply *reply)
 	QJsonObject Json = doc.toVariant().toJsonObject();
 	if(Json.value("status").toBool()){
 		QSqlQuery query;
-		query.prepare("UPDATE settings SET pk_token = :pk, files_area = :fa, save_to_db = :std WHERE 1 = 1;");
+		query.prepare("UPDATE settings SET pk_token = :pk, save_to_db = :std WHERE 1 = 1;");
 		query.bindValue(":pk", (ui->TextPk->text() == nullptr)? "NULL" : ui->TextPk->text());
-		query.bindValue(":fa", (ui->RadUserFiles->isChecked())? "api" : "local");
 		query.bindValue(":std", ui->ChkSave2db->isChecked());
 		query.exec();
 		LoadSettings();
 		DefaultSettings();
-		CreateToast("all done", "Your private key has been changed successfully.");
 	}else{
 		QMessageBox messageBox;
 		messageBox.setIcon(QMessageBox::Warning);
@@ -334,9 +259,7 @@ void Starfiles::on_BtnDeleteDatabase_clicked()
 {
 	QSqlQuery query;
 	query.exec("DELETE FROM files WHERE 1 = 1;");
-	if(List2Show == "local"){
-		LoadFilesFromDB(true);
-	}
+	ClearFilesList();
 }
 
 void Starfiles::on_BtnCancelSettings_clicked()
