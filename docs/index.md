@@ -12,8 +12,8 @@ just hit up the app and start uploading 🤝🏽.
 <img src="./4.png" />
 
 ### Download
-
-Help us to improve this application by testing the beta release : [v1.0.0-Beta](https://github.com/Lil-Nickel/StarfilesApp/releases/tag/v1.0.0)
+- Windows-x64 : [Setup.exe](https://github.com/Lil-Nickel/StarfilesApp/releases/download/untagged-66a0b8faeddebbf71190/Starfiles-1.0.0-Release-win64-Setup.exe)
+- Windows-x64 : [Portable.7z](https://github.com/Lil-Nickel/StarfilesApp/releases/download/untagged-66a0b8faeddebbf71190/Starfiles-1.0.0-Release-win64-Portable.7z)
 
 ### Support or Contact
 You can join starfiles community on discord here : <a href="https://discord.gg/JFvfPfJ" alt="Starfiles discord server" title="Starfiles discord server"><img src="https://vignette.wikia.nocookie.net/spartaremix/images/e/ec/Discord-new-logo.png" width="20" height="20"></a>
